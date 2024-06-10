@@ -1,0 +1,32 @@
+eureka:
+  client:
+    fetchRegistry: true
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://discovery-server-prod:9000/eureka
+  instance:
+    instance-id: ${spring.application.name}:${instanceId:${random.value}}
+    preferIpAddress: true
+server:
+  port: 10057
+spring:
+  cloud:
+    config:
+      override-none: true
+  application:
+    name: searchService
+  data:
+    mongodb:
+      database: searchServiceDb
+      uri: mongodb://search-db-prod:27017
+  kafka:
+    consumer:
+      auto-offset-reset: earliest
+      bootstrap-servers: kafka:9092
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: '*'
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer

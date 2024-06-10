@@ -1,0 +1,55 @@
+server:
+  port: 9002
+eureka:
+  client:
+    fetchRegistry: true
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://discovery-server-prod:9000/eureka
+  instance:
+    instance-id: ${spring.application.name}:${instanceId:${random.value}}
+    preferIpAddress: true
+spring:
+  application:
+    name: gatewayService
+  cloud:
+    gateway:
+      mvc:
+        routes[0]:
+          id: customerService
+          predicates[0]: Path=/customerservice/api/v1/customers/**
+          uri: lb://CUSTOMERSERVICE
+        routes[1]:
+          id: discoveryServer
+          predicates[0]: Path=/eureka/web
+          filters[0]: SetPath=/
+          uri: http://localhost:9000
+        routes[2]:
+          id: accountService
+          predicates[0]: Path=/accountservice/api/v1/accounts/**
+          uri: lb://ACCOUNTSERVICE
+        routes[3]:
+          id: searchService
+          predicates[0]: Path=/searchservice/api/v1/filters/**
+          uri: lb://SEARCHSERVICE
+        routes[4]:
+          id: catalogService
+          predicates[0]: Path=/catalogservice/api/v1/catalogs/**
+          uri: lb://CATALOGSERVICE
+        routes[5]:
+          id: identityService
+          predicates[0]: Path=/identityservice/api/v1/identity/**
+          uri: lb://IDENTITYSERVICE
+        routes[6]:
+          id: basketService
+          predicates[0]: Path=/basketservice/api/v1/baskets/**
+          uri: lb://BASKETSERVICE
+        routes[7]:
+          id: salesService
+          predicates[0]: Path=/salesservice/api/v1/orders/**
+          uri: lb://SALESSERVICE
+        routes[8]:
+          id: invoiceService
+          predicates[0]: Path=/invoiceservice/api/v1/invoices/**
+          uri: lb://INVOICESERVICE
+
